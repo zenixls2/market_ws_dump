@@ -197,6 +197,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "anyhow"
+version = "1.0.72"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3b13c32d80ecc7ab747b80c3784bce54ee8a7a0cc4fbda9bf4cda2cf6fe90854"
+
+[[package]]
 name = "autocfg"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -257,19 +263,6 @@ name = "base64"
 version = "0.21.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "604178f6c5c21f02dc555784810edfb88d34ac2c73b2eae109655649ee73ce3d"
-
-[[package]]
-name = "binance_rs"
-version = "0.1.0"
-dependencies = [
- "actix",
- "awc",
- "fern",
- "futures-util",
- "log",
- "serde_json",
- "tokio",
-]
 
 [[package]]
 name = "bitflags"
@@ -684,6 +677,20 @@ name = "log"
 version = "0.4.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b06a4cde4c0f271a446782e3eff8de789548ce57dbc8eca9292c27f4a42004b4"
+
+[[package]]
+name = "market_ws_dump"
+version = "0.1.0"
+dependencies = [
+ "actix",
+ "anyhow",
+ "awc",
+ "fern",
+ "futures-util",
+ "log",
+ "serde_json",
+ "tokio",
+]
 
 [[package]]
 name = "memchr"

@@ -1,3 +1,4 @@
+use anyhow::{anyhow, Result};
 use awc::ws::Frame;
 use futures_util::SinkExt;
 use futures_util::StreamExt;
@@ -15,8 +16,7 @@ fn setup_logger() -> Result<(), fern::InitError> {
     Ok(())
 }
 
-async fn main_thread() {
-    setup_logger().unwrap();
+async fn main_thread() -> Result<()> {
     let client = awc::Client::builder()
         .max_http_version(awc::http::Version::HTTP_11)
         .finish();
@@ -25,7 +25,7 @@ async fn main_thread() {
         .ws("wss://fstream.binance.com/ws")
         .connect()
         .await
-        .unwrap();
+        .map_err(|e| anyhow!("{:?}", e))?;
     info!("{:?}", resp);
     let params = vec!["btcusdt@forceOrder", "btcusdt@trade", "btcusdt@bookTicker"];
     let request = json!({
@@ -35,23 +35,25 @@ async fn main_thread() {
     });
     connection
         .send(awc::ws::Message::Text(request.to_string().into()))
-        .await
-        .unwrap();
+        .await?;
     while let Some(msg) = connection.next().await {
+        // better to log error? maybe chain it to other log file instead the dump log
         if let Ok(Frame::Text(text)) = msg {
-            info!("{}", str::from_utf8(&text).unwrap());
+            info!("{}", str::from_utf8(&text)?);
         }
     }
+    Ok(())
 }
 
-fn main() {
+fn main() -> Result<()> {
+    setup_logger()?;
     actix::System::with_tokio_rt(|| {
         tokio::runtime::Builder::new_multi_thread()
         .worker_threads(4)
         .enable_all()
         .build()
         .unwrap()
-    }).block_on(main_thread());
+    }).block_on(main_thread())
 }
 /*
  * Something similar:
