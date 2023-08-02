@@ -33,7 +33,7 @@ async fn main_thread() {
         "method": "SUBSCRIBE",
         "params": params,
     });
-    let _ = connection
+    connection
         .send(awc::ws::Message::Text(request.to_string().into()))
         .await
         .unwrap();
